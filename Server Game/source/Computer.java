@@ -3,25 +3,20 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * this is a Computer object which
- * makes an inform decision base
- * upon a Pattern object as well
- * as stores previously analyzed
- * Pattern objects into a local
- * HashMap
+ * This is the Computer class which makes an inform
+ * decision base upon a Pattern object as well as
+ * stores previously analyzed Pattern objects into
+ * a local HashMap.
  * 
  * @author Chou Thao
  *
  */
 public class Computer implements Serializable {
-	/**
-	 * a HashMap for storing Pattern objects
-	 * 
-	 */
+	/** a HashMap for storing Pattern objects */
 	private HashMap<Pattern, Integer> patterns;
 	
 	/**
-	 * a constructor for a Computer object
+	 * The default constructor for a Computer object
 	 * which instantiates a local HashMap
 	 * 
 	 */
@@ -30,7 +25,7 @@ public class Computer implements Serializable {
 	}
 	
 	/**
-	 * makes a prediction after analyzing
+	 * Makes a prediction after analyzing
 	 * a Pattern object relative to its
 	 * HashMap's stored Pattern objects
 	 * 
@@ -129,6 +124,14 @@ public class Computer implements Serializable {
 		}
 	}
 	
+	/**
+	 * Gets the value/counter associated with
+	 * a Pattern from the HashMap patterns.
+	 * 
+	 * @param plays the pattern key
+	 * @return      the value/counter of the
+	 *              pattern
+	 */
 	public int getValue(Pattern plays) {
 		if (patterns.containsKey(plays)) {
 			return (Integer)patterns.get(plays);
@@ -139,12 +142,12 @@ public class Computer implements Serializable {
 	}
 	
 	/**
-	 * stores a Pattern object into a local
+	 * Stores a Pattern object into a local
 	 * HashMap if it does not already contain
 	 * the Pattern, else increase the value
 	 * of the Pattern object's Key inside the
 	 * local HashMap indicating the Pattern
-	 * object has been view once more
+	 * object has been view once more.
 	 * 
 	 * @param plays a Pattern object to
 	 * 				be store
