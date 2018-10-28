@@ -3,11 +3,24 @@ import java.net.*;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * This is a Server class which hosts a socket for a
+ * client to connect to. The server hosts a Computer
+ * object and interacts with a client to play a game
+ * of rock, paper, scissors.
+ * 
+ * @author Chou Thao
+ *
+ */
 public class Server extends Thread {
 	public static void main(String[] args) {
 		try {
+			// initializes the server
 			ServerSocket server = new ServerSocket(1235);
 			Socket client = null;
+			
+			// keeps the server on after it has been initialized
+			// and wait for a client to connect
 			while (true) {
 				System.out.println("waiting...");
 				client = server.accept();
@@ -21,15 +34,26 @@ public class Server extends Thread {
 			System.out.println("Their has been an issue connecting the client.");
 		}
 	}
-
+	
+	/** Socket for a client. */
 	private Socket client;
 	
+	/** Score of the game. */
 	private int score;
-
+	
+	/** The Computer object. */
 	private Computer james;
 	
+	/** The RockPaperScissor object (game). */
 	private RockPaperScissor rps;
-
+	
+	/**
+	 * A constructor that initializes
+	 * the server and the client with
+	 * a socket input sock.
+	 * 
+	 * @param sock
+	 */
 	public Server(Socket sock) {
 		client = sock;
 		score = 0;
@@ -37,11 +61,20 @@ public class Server extends Thread {
 		loadFromAFile(james);
 		rps = new RockPaperScissor(james);
 	}
-
+	
+	/**
+	 * Gets the Computer james.
+	 * 
+	 * @return the Computer james
+	 */
 	public Computer getComp() {
 		return james;
 	}
-
+	
+	/**
+	 * Defines the run function to prompt
+	 * string choices for a client.
+	 */
 	public void run() {
 		try {
 			PrintStream out = new PrintStream(client.getOutputStream());
@@ -70,10 +103,9 @@ public class Server extends Thread {
 	}
 	
 	/**
-	 * saves current Computer's data
+	 * Saves current Computer's data.
 	 * 
-	 * @param comp
-	 *            current Computer in game
+	 * @param comp current Computer in game
 	 */
 	public static void saveToAFile(Computer comp) {
 		try {
@@ -89,10 +121,9 @@ public class Server extends Thread {
 	}
 
 	/**
-	 * loads a Computer object from a local file
+	 * Loads a Computer object from a local file.
 	 * 
-	 * @param comp
-	 *            a base Computer object to be overwritten
+	 * @param comp a base Computer object to be overwritten
 	 */
 	public static void loadFromAFile(Computer comp) {
 		try {
