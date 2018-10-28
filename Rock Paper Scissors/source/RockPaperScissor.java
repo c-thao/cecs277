@@ -6,212 +6,196 @@ import java.io.ObjectOutputStream;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * This is an RockPaperScissor Object which plays a decisive
+ * game of rock, paper, scissors with a player and a computer.
+ * The computer, however, is able to make predictions base
+ * upon the player's choices adding a tier of difficulty.
+ * 
+ * @author Chou Thao
+ *
+ */
 public class RockPaperScissor {
+	/** A Computer object for RockPaperScissor. */
+	private Computer james;
 
-	public static void main(String[] args) {
-		Computer james = new Computer();
-		String player = "", quad = "", quin = "";
-		String cTri = "", cQuad = "", cQuin = "";
-		String comp = "";
-		boolean quit = false;
-		int numTies = 0, numComp = 0, numPlay = 0;
-		int patThree = 0, patFour = 0, patFive = 0;
-		int trial = 0;
+	/** Three combinations of various lengths of player's turns. */
+	private String player, quad, quin;
+	
+	/** A string for the computer. */
+	private String comp;
+	
+	/** Placeholder data for predictions. */
+	private int patThree, patFour, patFive;
 
-		Scanner input = new Scanner(System.in);
-		System.out.println("Welcome to Rock, Paper, Scissors.");
-		System.out.println("Choose a difficulty:");
-		System.out.println("1. Beginner\n2. Veteran");
-		int dif = checkInt();
-		if (dif == 2) {
-			james = loadFromAFile(james);
-		}
-		while (quit == false) {
-			System.out.println("\nNext round:");
-			// make prediction on patterns of
-			// three, four, and five
-			cTri = james.makePrediction(new Pattern(player));
-			cQuad = james.makePrediction(new Pattern(quad));
-			cQuin = james.makePrediction(new Pattern(quin));
+	/** Placeholder data value. */
+	private int trial;
 
-			if (player.length() == 3) {
-				james.storePattern(new Pattern(player));
-				if (quad.length() == 4) {
-					james.storePattern(new Pattern(quad));
-					quad = quad.substring(1);
-				}
-				if (quin.length() == 5) {
-					james.storePattern(new Pattern(quin));
-					quin = quin.substring(1);
-				}
-				player = player.substring(1);
-			}
-			System.out.println("Please choose R, P, S, or Q.");
-			String thrown = input.next();
-			while (!thrown.equalsIgnoreCase("R")
-					&& !thrown.equalsIgnoreCase("P")
-					&& !thrown.equalsIgnoreCase("S")
-					&& !thrown.equalsIgnoreCase("Q")) {
-
-				System.out.println("Please choose R, P, S, or Q.");
-				thrown = input.next();
-			}
-			if (!thrown.equalsIgnoreCase("Q")) {
-				player = player + thrown;
-				quad = quad + thrown;
-				quin = quin + thrown;
-				player = player.toUpperCase();
-				quad = quad.toUpperCase();
-				quin = quin.toUpperCase();
-			} else {
-				quit = true;
-				saveToAFile(james);
-			}
-
-			int compChoose = new Random().nextInt(3);
-			// randomly choose a computer choice
-			// of prediction base upon pattern
-			// length
-			if (trial < 5) {
-				if (compChoose == 0) {
-					comp = cTri;
-				} else if (compChoose == 1) {
-					comp = cQuad;
-				} else {
-					comp = cQuin;
-				}
-				// choose computer choice base
-				// upon number of wins depending
-				// on pattern length
-			} else {
-				if (patThree >= patFour) {
-					if (patThree > patFive) {
-						if (patThree > patFour) {
-							comp = cTri;
-						} else {
-							int pick = new Random().nextInt(2);
-							if (pick == 0) {
-								comp = cTri;
-							} else {
-								comp = cQuad;
-							}
-						}
-					} else if (patThree == patFive) {
-						if (patThree > patFour) {
-							int pick = new Random().nextInt(2);
-							if (pick == 0) {
-								comp = cTri;
-							} else {
-								comp = cQuin;
-							}
-						} else {
-							int pick = new Random().nextInt(3);
-							if (pick == 0) {
-								comp = cTri;
-							} else if (pick == 1) {
-								comp = cQuin;
-							} else {
-								comp = cQuad;
-							}
-						}
-
-					} else {
-						comp = cQuin;
-					}
-				} else if (patFive >= patFour) {
-					if (patFive > patFour) {
-						comp = cQuin;
-					} else {
-						int pick = new Random().nextInt(2);
-						if (pick == 0) {
-							comp = cQuin;
-						} else {
-							comp = cQuad;
-						}
-					}
-				} else {
-					comp = cQuad;
-				}
-			}
-
-			System.out.println("Computer choses " + comp);
-
-			if (comp.equalsIgnoreCase(thrown)) {
-				System.out.println("Tie.");
-				numTies++;
-			} else if (comp.compareToIgnoreCase(thrown) == 3
-					|| comp.compareToIgnoreCase(thrown) == -2
-					|| comp.compareToIgnoreCase(thrown) == -1) {
-				System.out.println("James wins.");
-				numComp++;
-				// increment pattern win for
-				// respective length used
-				if (compChoose == 0) {
-					patThree++;
-				} else if (compChoose == 1) {
-					patFour++;
-				} else {
-					patFive++;
-				}
-				trial++;
-			} else {
-				System.out.println("Player wins.");
-				numPlay++;
-			}
-			System.out.println("Current Score: " + " W " + numPlay + " T "
-					+ numTies + " L " + numComp);
-		}
-		System.out.println("You have quitted the game.");
-		input.close();
+	/**
+	 * A constructor for RockPaperScissor which initializes the Computer.
+	 * 
+	 * @param comp the initial value for a Computer
+	 */
+	public RockPaperScissor(Computer computer) {
+		james = computer;
+		player = "";
+		quad = "";
+		quin = "";
+		comp = "";
+		patThree = 0;
+		patFour = 0;
+		patFive = 0;
+		trial = 0;
 	}
-
-	public static Computer loadFromAFile(Computer comp) {
-		try {
-			FileInputStream fileIn = new FileInputStream("comp.dat");
-			ObjectInputStream in = new ObjectInputStream(fileIn);
-			comp = (Computer) in.readObject();
-			in.close();
-			fileIn.close();
-			System.out.println("\nComputer data loaded correctly");
-			return comp;
-		} catch (IOException i) {
-			System.out.println("\nComputer data not found");
-		} catch (ClassNotFoundException c) {
-			System.out
-					.println("\nNo class was found for specified serialize object");
-		}
+	
+	/**
+	 * Gets the String comp.
+	 * 
+	 * @return the String comp
+	 */
+	public String getComp() {
 		return comp;
 	}
 
-	public static void saveToAFile(Computer comp) {
-		try {
-			FileOutputStream fileOut = new FileOutputStream("comp.dat");
-			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			out.writeObject(comp);
-			out.close();
-			fileOut.close();
-			System.out.println("\nComputer data saved correctly");
-		} catch (IOException i) {
-			System.out.println("\nObject not serializable");
+	/**
+	 * Plays a game of rock, papers, scissors pitting
+	 * a player against a computer who is adaptive to
+	 * the plays a player makes as the game goes along.
+	 */
+	public int playGame(String thrown) {
+		// makes predictions for computers
+		String cTri = "", cQuad = "", cQuin = "";
+		cTri = james.makePrediction(new Pattern(""));
+		cTri = james.makePrediction(new Pattern(player));
+		cQuad = james.makePrediction(new Pattern(quad));
+		cQuin = james.makePrediction(new Pattern(quin));
+
+		// stores current String of plays into three,
+		// four, and five length Patterns
+		if (player.length() == 3) {
+			james.storePattern(new Pattern(player));
+			if (quad.length() == 4) {
+				james.storePattern(new Pattern(quad));
+				quad = quad.substring(1);
+			}
+			if (quin.length() == 5) {
+				james.storePattern(new Pattern(quin));
+				quin = quin.substring(1);
+			}
+			player = player.substring(1);
+		}
+
+		// update current turns played
+		player = player + thrown;
+		quad = quad + thrown;
+		quin = quin + thrown;
+		player = player.toUpperCase();
+		quad = quad.toUpperCase();
+		quin = quin.toUpperCase();
+
+		// computer makes random decision
+		// initially to obtain data on
+		// best Pattern String length
+		// to analyze
+		int compChoose = new Random().nextInt(3);
+		if (trial < 5) {
+			if (compChoose == 0) {
+				comp = cTri;
+			} else if (compChoose == 1) {
+				comp = cQuad;
+			} else {
+				comp = cQuin;
+			}
+		} else {
+			comp = bestCompChoice(patThree, patFour, patFive, cTri, cQuad, cQuin);
+		}
+
+		// checks to see if computer or player wins
+		// and outputs an int to specify
+		if (comp.equalsIgnoreCase(thrown)) {
+			//System.out.println("Tie.");
+			return 0;
+		} else if (comp.compareToIgnoreCase(thrown) == 3 || comp.compareToIgnoreCase(thrown) == -2
+				|| comp.compareToIgnoreCase(thrown) == -1) {
+			//System.out.println("Computer James wins.");
+			if (compChoose == 0) {
+				patThree++;
+			} else if (compChoose == 1) {
+				patFour++;
+			} else {
+				patFive++;
+			}
+			trial++;
+			return -1;
+		} else {
+			//System.out.println("Player wins.");
+			return 1;
 		}
 	}
 
-	public static int checkInt() {
-		Scanner in = new Scanner(System.in);
-		boolean valid = false;
-		int validNum = 0;
+	/**
+	 * Decides the computer's next move to play based upon
+	 * the effectiveness of the predictions from patterns
+	 * of three lengths analyzed; lengths three, four,
+	 * and five.
+	 * 
+	 * @param patThree number of pattern of size three wins
+	 * @param patFour number of pattern of size four wins
+	 * @param patFive number of pattern of size five wins
+	 * @param cTri next choice based on analyzing a pattern of three
+	 * @param cQuad next choice based on analyzing a pattern of four
+	 * @param cQuin next choice based on analyzing a pattern of five
+	 * @return the computer's next choice
+	 */
+	public String bestCompChoice(int patThree, int patFour, int patFive, String cTri, String cQuad, String cQuin) {
+		if (patThree >= patFour) {
+			if (patThree > patFive) {
+				if (patThree > patFour) {
+					return cTri;
+				} else {
+					int pick = new Random().nextInt(2);
+					if (pick == 0) {
+						return cTri;
+					} else {
+						return cQuad;
+					}
+				}
+			} else if (patThree == patFive) {
+				if (patThree > patFour) {
+					int pick = new Random().nextInt(2);
+					if (pick == 0) {
+						return cTri;
+					} else {
+						return cQuin;
+					}
+				} else {
+					int pick = new Random().nextInt(3);
+					if (pick == 0) {
+						return cTri;
+					} else if (pick == 1) {
+						return cQuin;
+					} else {
+						return cQuad;
+					}
+				}
 
-		while (!valid) {
-			if (in.hasNextInt()) {
-				validNum = in.nextInt();
-				valid = true;
 			} else {
-				in.next();
-				System.out.print("Invalue input- Retry:");
+				return cQuin;
 			}
+		} else if (patFive >= patFour) {
+			if (patFive > patFour) {
+				return cQuin;
+			} else {
+				int pick = new Random().nextInt(2);
+				if (pick == 0) {
+					return cQuin;
+				} else {
+					return cQuad;
+				}
+			}
+		} else {
+			return cQuad;
 		}
-		in.close();
-		return validNum;
 	}
 
 }
