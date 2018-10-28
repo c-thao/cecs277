@@ -7,40 +7,34 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * 
- * This is an RockPaperScissor Object which plays a decisive game of rock,
- * paper, scissors with a player and a computer. The computer, however, is able
- * to make predictions base upon the player's choices adding a tier of
- * difficulty.
+ * This is an RockPaperScissor Object which plays a decisive
+ * game of rock, paper, scissors with a player and a computer.
+ * The computer, however, is able to make predictions base
+ * upon the player's choices adding a tier of difficulty.
  * 
  * @author Chou Thao
  *
  */
 public class RockPaperScissor {
-	/**
-	 * a Computer object for RockPaperScissor
-	 * 
-	 */
+	/** A Computer object for RockPaperScissor. */
 	private Computer james;
 
-	// three combinations of various lengths
-	// of player's turns
+	/** Three combinations of various lengths of player's turns. */
 	private String player, quad, quin;
 	
-	// computer play
+	/** A string for the computer. */
 	private String comp;
 	
-	// test data for predictions
+	/** Placeholder data for predictions. */
 	private int patThree, patFour, patFive;
 
-	// test data value
+	/** Placeholder data value. */
 	private int trial;
 
 	/**
-	 * a constructor for RockPaperScissor which initializes the Computer
+	 * A constructor for RockPaperScissor which initializes the Computer.
 	 * 
-	 * @param comp
-	 *            the initial value for a Computer
+	 * @param comp the initial value for a Computer
 	 */
 	public RockPaperScissor(Computer computer) {
 		james = computer;
@@ -54,15 +48,19 @@ public class RockPaperScissor {
 		trial = 0;
 	}
 	
+	/**
+	 * Gets the String comp.
+	 * 
+	 * @return the String comp
+	 */
 	public String getComp() {
 		return comp;
 	}
 
 	/**
-	 * plays a game of rock, papers, scissors pitting a player against a
-	 * computer who is adaptive to the plays a player makes as the game goes
-	 * along
-	 * 
+	 * Plays a game of rock, papers, scissors pitting
+	 * a player against a computer who is adaptive to
+	 * the plays a player makes as the game goes along.
 	 */
 	public int playGame(String thrown) {
 		// makes predictions for computers
@@ -136,22 +134,17 @@ public class RockPaperScissor {
 	}
 
 	/**
-	 * decides computer's next move based upon the effectiveness of the
-	 * predictions from patterns of three lengths analyzed, lengths three, four,
-	 * and five
+	 * Decides the computer's next move to play based upon
+	 * the effectiveness of the predictions from patterns
+	 * of three lengths analyzed; lengths three, four,
+	 * and five.
 	 * 
-	 * @param patThree
-	 *            number of pattern of size three wins
-	 * @param patFour
-	 *            number of pattern of size four wins
-	 * @param patFive
-	 *            number of pattern of size five wins
-	 * @param cTri
-	 *            next choice based on analyzing a pattern of three
-	 * @param cQuad
-	 *            next choice based on analyzing a pattern of four
-	 * @param cQuin
-	 *            next choice based on analyzing a pattern of five
+	 * @param patThree number of pattern of size three wins
+	 * @param patFour number of pattern of size four wins
+	 * @param patFive number of pattern of size five wins
+	 * @param cTri next choice based on analyzing a pattern of three
+	 * @param cQuad next choice based on analyzing a pattern of four
+	 * @param cQuin next choice based on analyzing a pattern of five
 	 * @return the computer's next choice
 	 */
 	public String bestCompChoice(int patThree, int patFour, int patFive, String cTri, String cQuad, String cQuin) {
