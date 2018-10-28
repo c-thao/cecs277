@@ -4,10 +4,22 @@ import java.util.*;
 
 import javax.swing.JFrame;
 
+/**
+ * This is a Client class which connects to a server
+ * socket and wraps a GUI design over a game of rock,
+ * papers, scissors. The client hosts the player and
+ * uses the gui to interact with the player. The
+ * client also updates the GUI with the tally of
+ * the game.
+ * 
+ * @author Chou Thao
+ *
+ */
 public class Client {
 	public static void main(String[] args) {
 		try {
 			System.out.println();
+			// initializes a connection to the server
 			Socket server = new Socket("localhost", 1235);
 			Scanner input = new Scanner(System.in);
 			Client clnt = new Client();
@@ -21,6 +33,7 @@ public class Client {
 			game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			game.setVisible(true);
 			
+			// plays the game until the done is true
 			while (!done) {
 				String srvrsp = in.readLine();
 				if (srvrsp != null) {
@@ -61,14 +74,24 @@ public class Client {
 		}
 	}
 	
+	/** Tally of wins, losses, and ties in the game. */
 	private int wins, losses, ties;
 	
+	/**
+	 *  Default Constructor.
+	 */
 	public Client() {
 		wins = 0;
 		losses = 0;
 		ties = 0;
 	}
 	
+	/**
+	 * Updates the tally of the game depending on
+	 * the integer input score.
+	 * 
+	 * @param score integer to update tally of the game
+	 */
 	public void updateScore(int score) {
 		if (score == 1) {
 			wins += 1;
@@ -79,18 +102,41 @@ public class Client {
 		}
 	}
 	
+	/**
+	 * Gets the number of ties.
+	 * 
+	 * @return ties
+	 */
 	public int getTies() {
 		return ties;
 	}
 	
+	/**
+	 * Gets the number of losses.
+	 * 
+	 * @return losses
+	 */
 	public int getLosses() {
 		return losses;
 	}
-	
+
+	/**
+	 * Gets the number of wins.
+	 * 
+	 * @return wins
+	 */
 	public int getWins() {
 		return wins;
 	}
 	
+	/**
+	 * Checks to see if a String input s, is
+	 * a valid integer.
+	 * 
+	 * @param s the String input to check
+	 * @return  true if the String is a valid
+	 *          integer, else false
+	 */
 	public static boolean isInteger(String s) {
 		try {
 			Integer.parseInt(s);
